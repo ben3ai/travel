@@ -82,7 +82,7 @@ if __name__ == '__main__':
         print("登录成功")
         mail_model_list = mail_fetch.get_mails()
         DATABASE_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + os.path.sep + "./database")
-        calendarHelper = CalendarGenerate('12306', DATABASE_DIR_PATH + '/'+ user_email +'.ics')
+        calendarHelper = CalendarGenerate('Travel', DATABASE_DIR_PATH + '/'+ user_email +'.ics')
         for mail in mail_model_list:
             event_id = mail['order_id']
             event_title, event_start, event_description = CalendarResovle().generate_calendar_model(mail)

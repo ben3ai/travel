@@ -7,14 +7,14 @@ class CalendarGenerate:
     def __init__(self, calendar_name, ics_file_path = './'):
         self._ics_file_path = ics_file_path
         calendar = Calendar()
-        calendar.add('prodid', '-//Calendar product for 12306')
+        calendar.add('prodid', '-//Calendar product for travel')
         calendar.add('version', '2.0') # 这里的 version 是 Calendar 协议的版本
         calendar.add('X-WR-CALNAME', calendar_name)
         self._calendar = calendar
 
     def add_event(self, uid, summary, dt_start, dt_end, description, alarm_before_hour = 0):
         create_time = datetime.today()
-        organizer = "12306 Calendar"
+        organizer = "Travel Calendar"
         event = Event()
         event.add('uid', uid)
         event.add('dtstamp', create_time)
@@ -47,7 +47,7 @@ class CalendarGenerate:
 
 if __name__ == '__main__':
     database_path = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + os.path.sep + "./database")
-    helper = CalendarGenerate('12306', database_path + '/test.ics')
+    helper = CalendarGenerate('Travel', database_path + '/test.ics')
     
     order_id = "order_id"
     summary = "summary123"

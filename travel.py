@@ -31,12 +31,13 @@ def sync_fetch(user_email, password, alarm_before_hour):
     return fetch_new_mails(alarm_before_hour, mail_model_list)
 
 def fetch_new_mails(alarm_before_hour, mail_model_list):
-    calendarHelper = CalendarGenerate('12306')
+    calendarHelper = CalendarGenerate('Travel')
     for mail in mail_model_list:
         event_id = mail['order_id']
         event_title, event_start, event_description = CalendarResovle().generate_calendar_model(mail)
         calendarHelper.add_event(event_id, event_title, event_start, event_start, event_description, alarm_before_hour)
     return response_content(calendarHelper)
+
 def check_args() -> bool:
     try:
         email = request.args.get("u")
@@ -59,7 +60,7 @@ def login_fail_file():
 
 def generate_error_file(event_title, event_info):
     event_id = str(datetime.now())
-    calendarHelper = CalendarGenerate('12306')
+    calendarHelper = CalendarGenerate('Travel')
     event_start = datetime.now().astimezone(tz=pytz.timezone("UTC"))
     calendarHelper.add_event( event_id, event_title, event_start, event_start, event_info)
     return response_content(calendarHelper)
@@ -69,7 +70,7 @@ def parameter_invalidate_file(url):
     event_id = str(datetime.now()) + random_str
     event_title = "登录失败，请检查邮箱和密码"
     event_info = "请检查邮箱以及密码是否正确"
-    calendarHelper = CalendarGenerate('12306')
+    calendarHelper = CalendarGenerate('Travel')
     event_start = datetime.now().astimezone(tz=pytz.timezone("UTC"))
     calendarHelper.add_event(event_id, event_title, event_start, event_start, event_info)
     return response_content(calendarHelper)
