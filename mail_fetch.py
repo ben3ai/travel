@@ -1,6 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
 from calendar_generate import CalendarGenerate
 from calendar_resovle import CalendarResovle
 from mail_resovle import MailResovle

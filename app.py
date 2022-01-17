@@ -5,12 +5,9 @@ from flask import Flask, request, jsonify, make_response, send_from_directory
 import shutil, re, os, pytz, random, string
 from datetime import datetime
 
+IS_SERVERLESS = bool(os.environ.get('SERVERLESS'))
+
 app = Flask(__name__)
-# 避免在其他路径运行时，./database 的相对路径 不正确了
-LOG_DIR_PATH = os.path.abspath(os.path.dirname(os.path.abspath(__file__)) + os.path.sep + "./log")
-
-IS_DEBUG_ENV = True
-
 @app.route('/')
 def do_login():
     if check_args() == False:
@@ -82,5 +79,5 @@ def response_content(calendarHelper):
     resp.headers['Content-Type']= 'text/calendar'
     return resp
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port='8080', debug=IS_DEBUG_ENV)
+# 启动服务，监听 9000 端口，监听地址为 0.0.0.0
+app.run(debug=IS_SERVERLESS!=True, port=9000, host='0.0.0.0')

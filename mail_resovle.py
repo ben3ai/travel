@@ -1,7 +1,7 @@
-from lxml import etree
 from email.parser import Parser
 from email.header import decode_header
 from email.utils import parseaddr
+import re
 
 class MailResovle:
     def resovle_to_mail(self, msg_content) -> dict:
@@ -24,7 +24,7 @@ class MailResovle:
 
     def __mail_content_html(self, msg):
         content_type = msg.get_content_type()
-        if  'text/html' in content_type:
+        if 'text/plain' in content_type or 'text/html' in content_type:
             charset = self.__content_charset(msg)
             if charset:
                 content = msg.get_payload(decode=True).decode(charset)
@@ -34,24 +34,22 @@ class MailResovle:
     def __get_order_info(self, content_html):
         order_id = ''
         order_info_str = ''
-        etree_html = etree.HTML(content_html) # 构造 entree.HTML 对象
-        order_id_xpath = '//td/div[2]/span/text()' # 设置目标 xpath 值，注意 xpath & text() 的拼接
-        order_id_result = etree_html.xpath(order_id_xpath) # 得到目标数据
-        if len(order_id_result) > 0:
-            order_id = order_id_result[0]
-        order_info_result = etree_html.xpath('//td/div/div[1]/text()') 
-        if len(order_info_result) > 0:
-            order_info_str = order_info_result[0].strip()
+        result = re.search(r'订单号码([A-Za-z0-9\s]*)',content_html,re.DOTALL)
+        if not result is None:
+            order_id = result.group(1).strip()
+        result = re.search(r'车票信息如下(?:\uFF1A|:)\s+(.*)\s+(?:为了确保|按购票时){1}',content_html,re.DOTALL)
+        if not result is None:
+            order_info_str = result.group(1).strip()
         return order_id, order_info_str
 
     def __train_type(self, msg):
         subject = self.__decode_str(msg.get('Subject', ''))
-        if "支付通知" in subject:
+        if "支付通知" in subject or "兑现成功通知" in subject:
             return 'insert'
-        elif "退票通知" in subject:
-            return 'delete'
         elif "改签通知" in subject:
             return 'modify'
+        elif "退票通知" in subject:
+            return 'delete'
         return ''
 
     def __content_charset(self, msg):
@@ -71,4 +69,4 @@ class MailResovle:
 
     def __check_mail(self, msg) -> bool:
         _, from_address = parseaddr(msg.get('From', ''))
-        return '12306@rails.com.cn' in from_address
+        return '12306@rails.com.cn' in from_address or 'ben3ai@gmail.com' in from_address

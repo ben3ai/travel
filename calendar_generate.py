@@ -7,7 +7,7 @@ class CalendarGenerate:
     def __init__(self, calendar_name, ics_file_path = './'):
         self._ics_file_path = ics_file_path
         calendar = Calendar()
-        calendar.add('prodid', '-//Calendar product for 12306//1875734581@qq.com//')
+        calendar.add('prodid', '-//Calendar product for 12306')
         calendar.add('version', '2.0') # 这里的 version 是 Calendar 协议的版本
         calendar.add('X-WR-CALNAME', calendar_name)
         self._calendar = calendar
